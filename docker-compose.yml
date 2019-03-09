@@ -1,0 +1,29 @@
+---
+version: "3"
+services:
+  front:
+    image: node:11.10.0
+    hostname: front
+    ports:
+      - "3000:3000"
+      - "9009:9009"
+    volumes:
+      - ./front:/etc/front
+    working_dir: /etc/front
+    command: "sh -c 'while sleep 3600; do :; done'"
+  api:
+    image: node:11.10.0
+    hostname: api
+    ports:
+      - "5000:5000"
+      - "4000:4000"
+    environment:
+      REST_PORT: 4000
+      GRAPHQL_PORT: 5000
+    volumes:
+      - ./api:/etc/api
+    working_dir: /etc/api
+    command: "sh -c 'while sleep 3600; do :; done'"
+networks:
+  database:
+    driver: bridge
