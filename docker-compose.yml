@@ -15,8 +15,8 @@ services:
     image: node:11.10.0
     hostname: api
     ports:
-      - "5000:5000"
       - "4000:4000"
+      - "5000:5000"
     environment:
       REST_PORT: 4000
       GRAPHQL_PORT: 5000
