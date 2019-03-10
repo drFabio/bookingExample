@@ -7,13 +7,14 @@ import {
   GET_SINGLE_PROPERTY,
   CANCEL_BOOKING
 } from './queries';
+import * as types from '../types';
 
 export class BookingManager {
   private _db: Database;
   constructor(db: Database) {
     this._db = db;
   }
-  getAllProperties(region?: any) {
+  getAllProperties(region?: any): Promise<[types.Property]> {
     return new Promise((resolve, reject) => {
       this._db.all(GET_ALL_PROPERTIES, (err: Error, data: [any]) => {
         if (err) {
@@ -25,7 +26,11 @@ export class BookingManager {
       });
     });
   }
-  getAvailableProperties(start: Date, end: Date, region?: any) {
+  getAvailableProperties(
+    start: Date,
+    end: Date,
+    region?: any
+  ): Promise<[types.Property]> {
     return new Promise((resolve, reject) => {
       this._db.all(
         GET_AVAILABLE_PROPERTIES,
@@ -41,12 +46,12 @@ export class BookingManager {
       );
     });
   }
-  getProperty(id: String): Promise<Error | any> {
+  getProperty(id: String): Promise<types.Property> {
     return new Promise((resolve, reject) => {
       this._db.get(
         GET_SINGLE_PROPERTY,
         { '@id': id },
-        (err: Error, data: [any]) => {
+        (err: Error, data: types.Property) => {
           if (err) {
             reject(err);
             return;
@@ -62,7 +67,7 @@ export class BookingManager {
     start: Date,
     end: Date,
     people: Number
-  ) {
+  ): Promise<boolean> {
     const propertyData = await this.getProperty(propertyId);
     if (propertyData.capacity < people) {
       return false;
@@ -92,7 +97,7 @@ export class BookingManager {
     userId: string,
     propertyId: string,
     people: Number
-  ) {
+  ): Promise<boolean> {
     const canBeBooked = await this.checkIfPropertyCanBeBooked(
       propertyId,
       start,
@@ -121,7 +126,7 @@ export class BookingManager {
       );
     });
   }
-  async cancelBooking(id: string): Promise<boolean | Error> {
+  async cancelBooking(id: string): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this._db.run(
         CANCEL_BOOKING,
