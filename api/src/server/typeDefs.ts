@@ -1,13 +1,27 @@
 import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
-  type Booking {
+  scalar Date
+  type Property {
     id: String
-    property_id: String
-    property_name: String
+    name: String
     city: String
+    capacity: Int
+  }
+  type Booking {
+    property: Property
+    start: Date
+    end: Date
+    user: User
+    canceled: Boolean
+  }
+  type User {
+    id: String
+    name: String
+    email: String
   }
   type Query {
+    properties: [Property]
     bookings: [Booking]
   }
 `;

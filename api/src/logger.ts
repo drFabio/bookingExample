@@ -1,6 +1,6 @@
-import { createLogger, format, transports } from 'winston';
+import { createLogger, format, transports, Logger } from 'winston';
 
-export function getLogger() {
+export function getLogger(): Logger {
   return createLogger({
     level: 'info',
     format: format.combine(format.colorize(), format.simple()),
