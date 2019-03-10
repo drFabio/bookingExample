@@ -5,6 +5,7 @@ import {
   CHECK_BOOKED_PROPERTY,
   BOOK_PROPERTY
 } from '../../src/managers/queries';
+import { getProperty, getBookingDb } from '../utils';
 
 const mockData = Symbol('data');
 describe('BookingManager', () => {
@@ -20,8 +21,6 @@ describe('BookingManager', () => {
   });
   it("Get's all properties", async () => {
     const manager = new BookingManager(mockDB);
-    const start = new Date();
-    const end = new Date();
     await manager.getAllProperties();
     const callArgs = mockDB.all.mock.calls[0];
     expect(callArgs[0]).toEqual(GET_ALL_PROPERTIES);
@@ -48,7 +47,9 @@ describe('BookingManager', () => {
       mockDB.get.mockImplementation((...args: any) =>
         args[args.length - 1](null, null)
       );
-      manager.getProperty = jest.fn(() => Promise.resolve({ people }));
+      manager.getProperty = jest.fn(() =>
+        Promise.resolve(getProperty({ capacity: people }))
+      );
       const canBeBooked = await manager.checkIfPropertyCanBeBooked(
         propertyId,
         start,
@@ -72,7 +73,7 @@ describe('BookingManager', () => {
 
       const propertyId = 'mockID';
       manager.getProperty = jest.fn(() =>
-        Promise.resolve({ capacity: people })
+        Promise.resolve(getProperty({ capacity: people }))
       );
       const canBeBooked = await manager.checkIfPropertyCanBeBooked(
         propertyId,
@@ -96,7 +97,9 @@ describe('BookingManager', () => {
       const people = 2;
 
       const propertyId = 'mockID';
-      manager.getProperty = jest.fn(() => Promise.resolve({ capacity: 1 }));
+      manager.getProperty = jest.fn(() =>
+        Promise.resolve(getProperty({ capacity: 1 }))
+      );
       const canBeBooked = await manager.checkIfPropertyCanBeBooked(
         propertyId,
         start,
@@ -149,5 +152,30 @@ describe('BookingManager', () => {
     const id = 'mockId';
     const succeeded = await manager.cancelBooking(id);
     expect(succeeded).toEqual(true);
+  });
+  it(' is listed', async () => {
+    const manager = new BookingManager(mockDB);
+    const responses = [
+      getBookingDb({ id: 'mock_1' }),
+      getBookingDb({ id: 'mockid_2' })
+    ];
+    mockDB.all.mockImplementation((...args: any) =>
+      args[args.length - 1](null, responses)
+    );
+    const bookings = await manager.getAllBookings();
+    expect(bookings).toEqual(responses.map(BookingManager.convertBooking));
+  });
+  it(' is listed for user', async () => {
+    const manager = new BookingManager(mockDB);
+    const mockUserId = 'mockUserId';
+    const responses = [
+      getBookingDb({ id: 'mock_1', user_id: mockUserId }),
+      getBookingDb({ id: 'mockid_2', user_id: mockUserId })
+    ];
+    mockDB.all.mockImplementation((...args: any) =>
+      args[args.length - 1](null, responses)
+    );
+    const bookings = await manager.getUserBookings(mockUserId);
+    expect(bookings).toEqual(responses.map(BookingManager.convertBooking));
   });
 });

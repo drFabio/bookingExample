@@ -25,10 +25,30 @@ export const GET_AVAILABLE_PROPERTIES = `
 `;
 
 export const BOOK_PROPERTY = `
-	INSERT INTO BOOKINGS (user_id, property_id, start_date, end_date)
+	INSERT INTO Bookings (user_id, property_id, start_date, end_date)
 		VALUES (@user, @property, @start, @end)
 `;
 
 export const CANCEL_BOOKING = `
-	UPDATE BOOKINGS SET canceled =1 WHERE id = @id
+	UPDATE Bookings SET canceled =1 WHERE id = @id
+`;
+export const GET_ALL_BOOKINGS = `
+SELECT B.*, 
+       P.id   AS property_id, 
+       P.name AS property_name, 
+       P.city, 
+       P.capacity, 
+       U.email, 
+       U.password, 
+       U.name AS user_name 
+FROM   bookings B 
+       LEFT JOIN properties P 
+              ON P.id = B.property_id 
+       LEFT JOIN users U 
+              ON U.id = B.user_id 
+		
+`;
+export const GET_USER_BOOKINGS = `
+	${GET_ALL_BOOKINGS}
+	WHERE B.user_id = @user
 `;

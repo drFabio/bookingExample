@@ -5,7 +5,9 @@ import {
   CHECK_BOOKED_PROPERTY,
   BOOK_PROPERTY,
   GET_SINGLE_PROPERTY,
-  CANCEL_BOOKING
+  CANCEL_BOOKING,
+  GET_ALL_BOOKINGS,
+  GET_USER_BOOKINGS
 } from './queries';
 import * as types from '../types';
 
@@ -14,9 +16,35 @@ export class BookingManager {
   constructor(db: Database) {
     this._db = db;
   }
-  getAllProperties(region?: any): Promise<[types.Property]> {
+  static convertBooking(booking: types.BookingDB): types.Booking {
+    const {
+      city,
+      capacity,
+      email,
+      user_id,
+      property_id,
+      user_name,
+      property_name,
+      ...other
+    } = booking;
+    return {
+      ...other,
+      user: {
+        email,
+        name: user_name,
+        id: user_id
+      },
+      property: {
+        id: property_id,
+        name: property_name,
+        capacity,
+        city
+      }
+    };
+  }
+  getAllProperties(region?: any): Promise<types.Property[]> {
     return new Promise((resolve, reject) => {
-      this._db.all(GET_ALL_PROPERTIES, (err: Error, data: [any]) => {
+      this._db.all(GET_ALL_PROPERTIES, (err: Error, data: types.Property[]) => {
         if (err) {
           reject(err);
           return;
@@ -30,7 +58,7 @@ export class BookingManager {
     start: Date,
     end: Date,
     region?: any
-  ): Promise<[types.Property]> {
+  ): Promise<types.Property[]> {
     return new Promise((resolve, reject) => {
       this._db.all(
         GET_AVAILABLE_PROPERTIES,
@@ -139,6 +167,47 @@ export class BookingManager {
             return;
           }
           resolve(true);
+        }
+      );
+    });
+  }
+  async getAllBookings(
+    convert: boolean = true
+  ): Promise<types.Booking[] | types.BookingDB[]> {
+    return new Promise((resolve, reject) => {
+      this._db.all(GET_ALL_BOOKINGS, (err: Error, data: types.BookingDB[]) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        let resp: types.Booking[] | types.BookingDB[] = data;
+        if (convert) {
+          resp = data.map(BookingManager.convertBooking);
+        }
+        resolve(resp);
+        return;
+      });
+    });
+  }
+  async getUserBookings(
+    user: string,
+    convert: boolean = true
+  ): Promise<types.Booking[] | types.BookingDB[]> {
+    return new Promise((resolve, reject) => {
+      this._db.all(
+        GET_USER_BOOKINGS,
+        { '@user': user },
+        (err: Error, data: types.BookingDB[]) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          let resp: types.Booking[] | types.BookingDB[] = data;
+          if (convert) {
+            resp = data.map(BookingManager.convertBooking);
+          }
+          resolve(resp);
+          return;
         }
       );
     });
