@@ -12,6 +12,9 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.11.0",
+    "@types/sqlite3": "^3.1.5",
     "eslint": "^5.15.1",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1",
@@ -25,6 +28,7 @@
     "apollo-server": "^2.4.8",
     "express": "^4.16.4",
     "graphql": "^14.1.1",
+    "sqlite3": "^4.0.6",
     "winston": "^3.2.1"
   },
   "jest": {
@@ -33,8 +37,8 @@
       "js"
     ],
     "transform": {
-      "\\.(ts)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+      "\\.(ts)$": "ts-jest"
     },
-    "testRegex": "/tests/.*\\.(ts|js)$"
+    "testRegex": "/tests/.*test\\.(ts|js)$"
   }
 }
