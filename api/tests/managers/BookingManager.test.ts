@@ -10,13 +10,12 @@ const mockData = Symbol('data');
 describe('BookingManager', () => {
   let mockDB: any = null;
   beforeEach(() => {
-    const successCB = jest.fn((...args) =>
-      args[args.length - 1](null, mockData)
-    );
+    const getSuccessCb = () =>
+      jest.fn((...args) => args[args.length - 1](null, mockData));
     mockDB = {
-      all: successCB,
-      get: successCB,
-      run: successCB
+      all: getSuccessCb(),
+      get: getSuccessCb(),
+      run: getSuccessCb()
     };
   });
   it("Get's all properties", async () => {
@@ -45,13 +44,16 @@ describe('BookingManager', () => {
       const start = new Date();
       const end = new Date();
       const propertyId = 'mockID';
+      const people = 1;
       mockDB.get.mockImplementation((...args: any) =>
         args[args.length - 1](null, null)
       );
+      manager.getProperty = jest.fn(() => Promise.resolve({ people }));
       const canBeBooked = await manager.checkIfPropertyCanBeBooked(
         propertyId,
         start,
-        end
+        end,
+        people
       );
       expect(canBeBooked).toEqual(true);
       const callArgs = mockDB.get.mock.calls[0];
@@ -66,11 +68,17 @@ describe('BookingManager', () => {
       const manager = new BookingManager(mockDB);
       const start = new Date();
       const end = new Date();
+      const people = 1;
+
       const propertyId = 'mockID';
+      manager.getProperty = jest.fn(() =>
+        Promise.resolve({ capacity: people })
+      );
       const canBeBooked = await manager.checkIfPropertyCanBeBooked(
         propertyId,
         start,
-        end
+        end,
+        people
       );
       expect(canBeBooked).toEqual(false);
       const callArgs = mockDB.get.mock.calls[0];
@@ -81,6 +89,23 @@ describe('BookingManager', () => {
         '@id': propertyId
       });
     });
+    it('Return false if capacity is below the wanted capacity', async () => {
+      const manager = new BookingManager(mockDB);
+      const start = new Date();
+      const end = new Date();
+      const people = 2;
+
+      const propertyId = 'mockID';
+      manager.getProperty = jest.fn(() => Promise.resolve({ capacity: 1 }));
+      const canBeBooked = await manager.checkIfPropertyCanBeBooked(
+        propertyId,
+        start,
+        end,
+        people
+      );
+      expect(canBeBooked).toEqual(false);
+      expect(mockDB.get).not.toBeCalled();
+    });
   });
   describe('Booking', () => {
     it('succeds on a unbooked property', async () => {
@@ -90,7 +115,9 @@ describe('BookingManager', () => {
       const end = new Date();
       const propertyId = 'mockID';
       const userId = 'userId';
-      const booked = await manager.book(start, end, userId, propertyId);
+      const people = 1;
+
+      const booked = await manager.book(start, end, userId, propertyId, people);
       expect(booked).toEqual(mockData);
       const callArgs = mockDB.run.mock.calls[0];
       expect(callArgs[0]).toEqual(BOOK_PROPERTY);
@@ -110,12 +137,17 @@ describe('BookingManager', () => {
       const end = new Date();
       const propertyId = 'mockID';
       const userId = 'userId';
-      const booked = await manager.book(start, end, userId, propertyId);
+      const people = 1;
+
+      const booked = await manager.book(start, end, userId, propertyId, people);
       expect(booked).toEqual(false);
       expect(mockDB.run).not.toBeCalled();
     });
   });
-  it.todo("Can't book a booked property");
-  it.todo('Can cancel a booking');
-  it.todo("Can't book if the capacity is below the booking ");
+  it('Can cancel a booking', async () => {
+    const manager = new BookingManager(mockDB);
+    const id = 'mockId';
+    const succeeded = await manager.cancelBooking(id);
+    expect(succeeded).toEqual(true);
+  });
 });

@@ -3,7 +3,9 @@ import {
   GET_AVAILABLE_PROPERTIES,
   GET_ALL_PROPERTIES,
   CHECK_BOOKED_PROPERTY,
-  BOOK_PROPERTY
+  BOOK_PROPERTY,
+  GET_SINGLE_PROPERTY,
+  CANCEL_BOOKING
 } from './queries';
 
 export class BookingManager {
@@ -39,7 +41,32 @@ export class BookingManager {
       );
     });
   }
-  checkIfPropertyCanBeBooked(propertyId: String, start: Date, end: Date) {
+  getProperty(id: String): Promise<Error | any> {
+    return new Promise((resolve, reject) => {
+      this._db.get(
+        GET_SINGLE_PROPERTY,
+        { '@id': id },
+        (err: Error, data: [any]) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(data);
+          return;
+        }
+      );
+    });
+  }
+  async checkIfPropertyCanBeBooked(
+    propertyId: String,
+    start: Date,
+    end: Date,
+    people: Number
+  ) {
+    const propertyData = await this.getProperty(propertyId);
+    if (propertyData.capacity < people) {
+      return false;
+    }
     return new Promise((resolve, reject) => {
       this._db.get(
         CHECK_BOOKED_PROPERTY,
@@ -59,11 +86,18 @@ export class BookingManager {
       );
     });
   }
-  async book(start: Date, end: Date, userId: string, propertyId: string) {
+  async book(
+    start: Date,
+    end: Date,
+    userId: string,
+    propertyId: string,
+    people: Number
+  ) {
     const canBeBooked = await this.checkIfPropertyCanBeBooked(
       propertyId,
       start,
-      end
+      end,
+      people
     );
     if (!canBeBooked) {
       return false;
@@ -87,5 +121,21 @@ export class BookingManager {
       );
     });
   }
-  async getProperties(region: any) {}
+  async cancelBooking(id: string): Promise<boolean | Error> {
+    return new Promise((resolve, reject) => {
+      this._db.run(
+        CANCEL_BOOKING,
+        {
+          '@id': id
+        },
+        (err: Error, data: any) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(true);
+        }
+      );
+    });
+  }
 }
