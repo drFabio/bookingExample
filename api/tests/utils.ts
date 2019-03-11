@@ -25,6 +25,7 @@ const bookingDbDefaults = {
   property_id: 'mock_property_id',
   property_name: 'mock_property_name'
 };
+
 export function getBookingDb(b?: Partial<types.BookingDB>): types.BookingDB {
   return {
     ...bookingDbDefaults,

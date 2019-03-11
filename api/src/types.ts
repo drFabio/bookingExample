@@ -44,3 +44,11 @@ export interface BookingDB {
   property_id: string;
   property_name: string;
 }
+
+export interface BookingRequest {
+  start: Date;
+  end: Date;
+  user: string;
+  property: string;
+  people: Number;
+}

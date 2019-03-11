@@ -9,6 +9,7 @@ export const typeDefs = gql`
     capacity: Int
   }
   type Booking {
+    id: String
     property: Property
     start: Date
     end: Date
@@ -23,5 +24,22 @@ export const typeDefs = gql`
   type Query {
     properties: [Property]
     bookings: [Booking]
+  }
+  interface Response {
+    success: Boolean!
+  }
+  type BookResponse implements Response {
+    success: Boolean!
+    booking: Booking
+  }
+
+  type Mutation {
+    book(
+      user: ID!
+      property: ID!
+      start: Date!
+      end: Date!
+      people: Int!
+    ): BookResponse
   }
 `;

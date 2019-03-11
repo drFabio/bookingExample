@@ -7,7 +7,8 @@ import {
   GET_SINGLE_PROPERTY,
   CANCEL_BOOKING,
   GET_ALL_BOOKINGS,
-  GET_USER_BOOKINGS
+  GET_USER_BOOKINGS,
+  GET_SINGLE_BOOKING
 } from './queries';
 import * as types from '../types';
 
@@ -125,7 +126,7 @@ export class BookingManager {
     userId: string,
     propertyId: string,
     people: Number
-  ): Promise<boolean> {
+  ): Promise<string> {
     const canBeBooked = await this.checkIfPropertyCanBeBooked(
       propertyId,
       start,
@@ -133,7 +134,7 @@ export class BookingManager {
       people
     );
     if (!canBeBooked) {
-      return false;
+      throw new Error("Can't be booked");
     }
     return new Promise((resolve, reject) => {
       this._db.run(
@@ -144,12 +145,12 @@ export class BookingManager {
           '@start': start,
           '@end': end
         },
-        (err: Error, data: any) => {
+        function(err: Error) {
           if (err) {
             reject(err);
             return;
           }
-          resolve(data);
+          resolve(`${this.lastID}`);
         }
       );
     });
@@ -207,6 +208,22 @@ export class BookingManager {
             resp = data.map(BookingManager.convertBooking);
           }
           resolve(resp);
+          return;
+        }
+      );
+    });
+  }
+  async getBooking(id: string): Promise<types.Booking> {
+    return new Promise((resolve, reject) => {
+      this._db.get(
+        GET_SINGLE_BOOKING,
+        { '@id': id },
+        (err: Error, data: types.BookingDB) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve(BookingManager.convertBooking(data));
           return;
         }
       );

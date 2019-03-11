@@ -114,6 +114,10 @@ describe('BookingManager', () => {
     it('succeds on a unbooked property', async () => {
       const manager = new BookingManager(mockDB);
       manager.checkIfPropertyCanBeBooked = jest.fn(() => Promise.resolve(true));
+      const expectedBooking = 'mockId';
+      mockDB.run.mockImplementation((...args: any) =>
+        args[args.length - 1].bind({ lastID: expectedBooking })(null)
+      );
       const start = new Date();
       const end = new Date();
       const propertyId = 'mockID';
@@ -121,7 +125,7 @@ describe('BookingManager', () => {
       const people = 1;
 
       const booked = await manager.book(start, end, userId, propertyId, people);
-      expect(booked).toEqual(mockData);
+      expect(booked).toEqual(expectedBooking);
       const callArgs = mockDB.run.mock.calls[0];
       expect(callArgs[0]).toEqual(BOOK_PROPERTY);
       expect(callArgs[1]).toEqual({
@@ -141,10 +145,9 @@ describe('BookingManager', () => {
       const propertyId = 'mockID';
       const userId = 'userId';
       const people = 1;
-
-      const booked = await manager.book(start, end, userId, propertyId, people);
-      expect(booked).toEqual(false);
-      expect(mockDB.run).not.toBeCalled();
+      expect(
+        manager.book(start, end, userId, propertyId, people)
+      ).rejects.toThrow(Error);
     });
   });
   it('Can cancel a booking', async () => {
