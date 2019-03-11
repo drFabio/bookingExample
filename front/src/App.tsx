@@ -4,7 +4,7 @@ import ApolloClient from "apollo-boost";
 import { settings } from "./settings";
 import { ApolloProvider } from "react-apollo";
 import { Main } from "./Main";
-import { PropertyList } from "./PropertyList";
+import { PropertyBrowser } from "./PropertyBrowser";
 
 const client = new ApolloClient({
   uri: settings.graphqlUrl
@@ -16,7 +16,7 @@ class App extends Component {
         <GlobalStyle />
         <ApolloProvider client={client}>
           <Main>
-            <PropertyList />
+            <PropertyBrowser />
           </Main>
         </ApolloProvider>
       </React.Fragment>
