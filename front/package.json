@@ -11,6 +11,7 @@
     "graphql": "^14.1.1",
     "leaflet": "^1.4.0",
     "lint-staged": "^8.1.5",
+    "moment": "^2.24.0",
     "prettier": "^1.16.4",
     "react": "^16.8.4",
     "react-apollo": "^2.5.2",
