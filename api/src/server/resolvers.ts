@@ -34,7 +34,8 @@ export const resolvers = {
         const booking = await context.bookingManager.getBooking(bookingId);
         return {
           success: true,
-          booking
+          booking,
+          id: booking.id
         };
       } catch (err) {
         return {

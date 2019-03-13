@@ -28,9 +28,11 @@ export const typeDefs = gql`
   }
   interface Response {
     success: Boolean!
+    id: ID
   }
   type BookResponse implements Response {
     success: Boolean!
+    id: ID
     booking: Booking
   }
 
