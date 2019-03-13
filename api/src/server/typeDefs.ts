@@ -23,6 +23,7 @@ export const typeDefs = gql`
   }
   type Query {
     properties: [Property]
+    availableProperties(start: Date!, end: Date!): [Property]
     bookings: [Booking]
   }
   interface Response {

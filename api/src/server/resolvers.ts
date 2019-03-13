@@ -2,6 +2,16 @@ import * as types from '../types';
 
 export const resolvers = {
   Query: {
+    availableProperties: async (
+      parent: any,
+      args: types.RangeParameters,
+      context: types.Context
+    ) => {
+      return await context.bookingManager.getAvailableProperties(
+        args.start,
+        args.end
+      );
+    },
     properties: async (parent: any, args: any, context: types.Context) => {
       return await context.bookingManager.getAllProperties();
     },
