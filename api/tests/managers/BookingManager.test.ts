@@ -5,9 +5,14 @@ import {
   CHECK_BOOKED_PROPERTY,
   BOOK_PROPERTY
 } from '../../src/managers/queries';
-import { getProperty, getBookingDb } from '../utils';
+import {
+  getProperty,
+  getBookingDb,
+  mockData,
+  mockStartDate,
+  mockEndDate
+} from '../utils';
 
-const mockData = Symbol('data');
 describe('BookingManager', () => {
   let mockDB: any = null;
   beforeEach(() => {
@@ -27,8 +32,8 @@ describe('BookingManager', () => {
   });
   it("Get's the available properties withing a date range", async () => {
     const manager = new BookingManager(mockDB);
-    const start = new Date();
-    const end = new Date();
+    const start = mockStartDate;
+    const end = mockEndDate;
     await manager.getAvailableProperties(start, end);
     const callArgs = mockDB.all.mock.calls[0];
     expect(callArgs[0]).toEqual(GET_AVAILABLE_PROPERTIES);
@@ -40,8 +45,8 @@ describe('BookingManager', () => {
   describe("Check's if a property is booked on a given period", () => {
     it('Returning true if unbooked', async () => {
       const manager = new BookingManager(mockDB);
-      const start = new Date();
-      const end = new Date();
+      const start = mockStartDate;
+      const end = mockEndDate;
       const propertyId = 'mockID';
       const people = 1;
       mockDB.get.mockImplementation((...args: any) =>
@@ -67,8 +72,8 @@ describe('BookingManager', () => {
     });
     it('Returning false if booked', async () => {
       const manager = new BookingManager(mockDB);
-      const start = new Date();
-      const end = new Date();
+      const start = mockStartDate;
+      const end = mockEndDate;
       const people = 1;
 
       const propertyId = 'mockID';
@@ -92,8 +97,8 @@ describe('BookingManager', () => {
     });
     it('Return false if capacity is below the wanted capacity', async () => {
       const manager = new BookingManager(mockDB);
-      const start = new Date();
-      const end = new Date();
+      const start = mockStartDate;
+      const end = mockEndDate;
       const people = 2;
 
       const propertyId = 'mockID';
@@ -118,8 +123,8 @@ describe('BookingManager', () => {
       mockDB.run.mockImplementation((...args: any) =>
         args[args.length - 1].bind({ lastID: expectedBooking })(null)
       );
-      const start = new Date();
-      const end = new Date();
+      const start = mockStartDate;
+      const end = mockEndDate;
       const propertyId = 'mockID';
       const userId = 'userId';
       const people = 1;
@@ -140,8 +145,8 @@ describe('BookingManager', () => {
       manager.checkIfPropertyCanBeBooked = jest.fn(() =>
         Promise.resolve(false)
       );
-      const start = new Date();
-      const end = new Date();
+      const start = mockStartDate;
+      const end = mockEndDate;
       const propertyId = 'mockID';
       const userId = 'userId';
       const people = 1;

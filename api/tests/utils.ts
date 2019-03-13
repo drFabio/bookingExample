@@ -1,4 +1,7 @@
 import * as types from '../src/types';
+export const mockData = Symbol('data');
+export const mockStartDate = '2019-01-01';
+export const mockEndDate = '2020-01-01';
 
 const propertyDefaults = {
   id: 'mock_id',
@@ -14,8 +17,8 @@ export function getProperty(p?: Partial<types.Property>): types.Property {
 }
 const bookingDbDefaults = {
   id: 'mock_id',
-  start: new Date(),
-  end: new Date(),
+  start: mockStartDate,
+  end: mockEndDate,
   canceled: false,
   city: 'mock_city',
   capacity: 1,

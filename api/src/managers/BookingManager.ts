@@ -56,8 +56,8 @@ export class BookingManager {
     });
   }
   getAvailableProperties(
-    start: Date,
-    end: Date,
+    start: string,
+    end: string,
     region?: any
   ): Promise<types.Property[]> {
     return new Promise((resolve, reject) => {
@@ -93,8 +93,8 @@ export class BookingManager {
   }
   async checkIfPropertyCanBeBooked(
     propertyId: String,
-    start: Date,
-    end: Date,
+    start: types.DateStr,
+    end: types.DateStr,
     people: Number
   ): Promise<boolean> {
     const propertyData = await this.getProperty(propertyId);
@@ -121,8 +121,8 @@ export class BookingManager {
     });
   }
   async book(
-    start: Date,
-    end: Date,
+    start: types.DateStr,
+    end: types.DateStr,
     userId: string,
     propertyId: string,
     people: Number

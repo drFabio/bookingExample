@@ -1,6 +1,8 @@
 import { BookingManager } from './managers';
 import { Logger } from 'winston';
 
+export type DateStr = string;
+
 export interface Settings {
   port: number;
   graphqlPort: number;
@@ -20,8 +22,8 @@ export interface Property {
 }
 export interface Booking {
   id: string;
-  start: Date;
-  end: Date;
+  start: DateStr;
+  end: DateStr;
   canceled: boolean;
   property: Property;
   user: User;
@@ -33,8 +35,8 @@ export interface Context {
 }
 export interface BookingDB {
   id: string;
-  start: Date;
-  end: Date;
+  start: DateStr;
+  end: DateStr;
   canceled: boolean;
   city: string;
   capacity: number;
@@ -46,9 +48,14 @@ export interface BookingDB {
 }
 
 export interface BookingRequest {
-  start: Date;
-  end: Date;
+  start: DateStr;
+  end: DateStr;
   user: string;
   property: string;
   people: Number;
+}
+
+export interface RangeParameters {
+  start: DateStr;
+  end: DateStr;
 }
