@@ -12,7 +12,7 @@ const GET_BOOKINGS_ON_PERIOD = `
 					B.start_date BETWEEN DATE(@start) AND DATE(@end)
 					OR B.end_date BETWEEN  DATE(@start) AND DATE(@end)
 			) 
-	AND B.canceled != 1
+	AND (B.canceled != 1 OR b.canceled IS NULL)
 `;
 export const CHECK_BOOKED_PROPERTY = `
  ${GET_BOOKINGS_ON_PERIOD} AND B.property_id = @id LIMIT 1
