@@ -19,6 +19,7 @@ export function Map({ position }: MapProps) {
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
         map
       );
+      L.marker(position).addTo(map);
     }
   }, []);
 
