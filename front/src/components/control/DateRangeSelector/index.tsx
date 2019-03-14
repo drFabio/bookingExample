@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import moment from "moment";
-import { TextButton } from "../PresentationalComponents";
+import { TextButton } from "../../presentational";
 
 export interface DateRangeSelectorProps {
   onChooseDate(fromDate: string, toDate: string): void;

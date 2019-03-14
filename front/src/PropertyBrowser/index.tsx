@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { PropertyList, Property } from "./components/PropertyList";
 import { BookingControl } from "./components/BookingControl";
-import { DateRangeSelector } from "../DateRangeSelector";
-import { TextButton } from "../PresentationalComponents";
-import { Map } from "../Map";
+import { DateRangeSelector } from "../components/control/DateRangeSelector";
+import { Map } from "../components/control/Map";
+
+import { TextButton } from "../components/presentational";
 
 const userId = "1";
 export function PropertyBrowser() {

@@ -6,7 +6,7 @@ import {
   InnerContainer,
   Header
 } from "./presentationalComponents";
-import { theme } from "../PresentationalComponents";
+import { theme } from "../components/presentational";
 
 export interface MainProps {
   children: ReactNode;

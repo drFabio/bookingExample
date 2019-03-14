@@ -1,7 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
-import { TextButton } from "../../../PresentationalComponents";
+import { TextButton } from "../../../components/presentational";
 
 export interface Property {
   id: string;
