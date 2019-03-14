@@ -1,6 +1,7 @@
 import React from "react";
 import { Query } from "react-apollo";
 import gql from "graphql-tag";
+import { TextButton } from "../../../PresentationalComponents";
 
 export interface Property {
   id: string;
@@ -42,14 +43,14 @@ export function PropertyList({
             <div key={id}>
               <p>
                 {name} , {city}, {capacity}{" "}
-                <button
+                <TextButton
                   onClick={e => {
                     e.preventDefault;
                     onChooseProperty(current);
                   }}
                 >
                   Choose it!
-                </button>
+                </TextButton>
               </p>
             </div>
           );

@@ -1,6 +1,7 @@
 import React, { Fragment, ReactNode, useState } from "react";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import { TextButton } from "../../../PresentationalComponents";
 
 const EXECUTE_BOOKING = gql`
   mutation Book(
@@ -62,7 +63,7 @@ export function BookingControl({
             min="1"
             onChange={({ target: { value } }) => setPeople(parseInt(value, 10))}
           />
-          <button
+          <TextButton
             onClick={e => {
               e.preventDefault();
               const variables = {
@@ -76,7 +77,7 @@ export function BookingControl({
             }}
           >
             {loading ? "Booking it..." : "Book it!"}
-          </button>
+          </TextButton>
         </Fragment>
       )}
     </Mutation>

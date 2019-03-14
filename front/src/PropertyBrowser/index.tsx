@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { PropertyList, Property } from "./components/PropertyList";
 import { BookingControl } from "./components/BookingControl";
 import { DateRangeSelector } from "../DateRangeSelector";
+import { TextButton } from "../PresentationalComponents";
 
 const userId = "1";
 export function PropertyBrowser() {
@@ -27,8 +28,8 @@ export function PropertyBrowser() {
     return (
       <p>
         We need to know where you are to show properties! Click{" "}
-        <button onClick={() => setSearch(true)}>here</button> to let us know
-        where you are
+        <TextButton onClick={() => setSearch(true)}>here</TextButton> to let us
+        know where you are
       </p>
     );
   }

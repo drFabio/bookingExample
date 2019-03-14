@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from "react";
 import moment from "moment";
+import { TextButton } from "../PresentationalComponents";
 
 export interface DateRangeSelectorProps {
   onChooseDate(fromDate: string, toDate: string): void;
@@ -56,16 +57,16 @@ export function DateRangeSelector({ onChooseDate }: DateRangeSelectorProps) {
       {isOrderCorrect === false && (
         <Fragment>
           <p>Your start date is AFTER your end Date</p>
-          <button onClick={swapDate}>Swap it!</button>
+          <TextButton onClick={swapDate}>Swap it!</TextButton>
         </Fragment>
       )}
       {isOrderCorrect && (
         <Fragment>
-          <button
+          <TextButton
             onClick={() => onChooseDate(fromDate as string, toDate as string)}
           >
             Choose it!
-          </button>
+          </TextButton>
         </Fragment>
       )}
     </Fragment>
