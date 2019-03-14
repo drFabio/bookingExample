@@ -3,6 +3,7 @@ import { PropertyList, Property } from "./components/PropertyList";
 import { BookingControl } from "./components/BookingControl";
 import { DateRangeSelector } from "../DateRangeSelector";
 import { TextButton } from "../PresentationalComponents";
+import { Map } from "../Map";
 
 const userId = "1";
 export function PropertyBrowser() {
@@ -40,6 +41,7 @@ export function PropertyBrowser() {
         <DateRangeSelector
           onChooseDate={(fromDate, toDate) => setDateRange([fromDate, toDate])}
         />
+        <Map position={location as [number, number]} />
       </Fragment>
     );
   }
