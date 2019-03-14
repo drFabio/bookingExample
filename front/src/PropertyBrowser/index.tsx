@@ -9,6 +9,7 @@ export function PropertyBrowser() {
   const [dateRange, setDateRange] = useState<null | [string, string]>(null);
   const [selectedProperty, setProperty] = useState<null | Property>(null);
   const [allowSearch, setAllowSearch] = useState<boolean>(false);
+  const [bookingId, setBooking] = useState<null | string>(null);
 
   useEffect(() => {
     if (allowSearch && !location) {
@@ -45,20 +46,43 @@ export function PropertyBrowser() {
 
   if (!selectedProperty) {
     return (
-      <PropertyList
-        fromDate={fromDate as string}
-        toDate={toDate as string}
-        onChooseProperty={setProperty}
+      <Fragment>
+        <p>
+          And where exactly are you going on {fromDate} - {toDate}{" "}
+          <button
+            onClick={e => {
+              e.preventDefault();
+              setDateRange(null);
+            }}
+          >
+            Change
+          </button>{" "}
+        </p>
+        <PropertyList
+          fromDate={fromDate as string}
+          toDate={toDate as string}
+          onChooseProperty={setProperty}
+        />
+      </Fragment>
+    );
+  }
+  if (!bookingId) {
+    return (
+      <BookingControl
+        user={userId}
+        property={selectedProperty.id}
+        start={fromDate}
+        end={toDate}
+        capacity={selectedProperty.capacity}
+        onSucessfullBooking={id => setBooking(id)}
       />
     );
   }
   return (
-    <BookingControl
-      user={userId}
-      property={selectedProperty.id}
-      start={fromDate}
-      end={toDate}
-      capacity={selectedProperty.capacity}
-    />
+    <p>
+      {`Congratulations you sucessfully booked ${
+        selectedProperty.name
+      } at ${fromDate}-${toDate}`}
+    </p>
   );
 }

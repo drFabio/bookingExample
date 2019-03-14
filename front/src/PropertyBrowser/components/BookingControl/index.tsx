@@ -29,6 +29,7 @@ export interface BookingControlProps {
   start: string;
   end: string;
   capacity: number;
+  onSucessfullBooking(bookingId: string): void;
 }
 export function BookingControl({
   children,
@@ -36,14 +37,20 @@ export function BookingControl({
   property,
   start,
   end,
-  capacity
+  capacity,
+  onSucessfullBooking
 }: BookingControlProps) {
   const [people, setPeople] = useState<number>(1);
-
+  const onBooking = ({ data }: any) => {
+    if (data.book.success) {
+      onSucessfullBooking(data.book.id);
+    }
+  };
   return (
     <Mutation mutation={EXECUTE_BOOKING}>
       {(executeBooking, { loading, error }) => (
         <Fragment>
+          any
           {children}
           {error && <p>Something went wrong, please try again</p>}
           <label htmlFor="occupants">Occupants: </label>
@@ -65,7 +72,7 @@ export function BookingControl({
                 end,
                 people
               };
-              executeBooking({ variables });
+              executeBooking({ variables }).then(onBooking);
             }}
           >
             {loading ? "Booking it..." : "Book it!"}
