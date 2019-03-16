@@ -11,6 +11,7 @@ import {
   GET_SINGLE_BOOKING
 } from './queries';
 import * as types from '../types';
+import { generateFakeLatLng } from '../utils/generateFakeLatLng';
 
 export class BookingManager {
   private _db: Database;
@@ -58,18 +59,24 @@ export class BookingManager {
   getAvailableProperties(
     start: string,
     end: string,
-    region?: any
+    minCapacity: number,
+    location: types.Location
   ): Promise<types.Property[]> {
     return new Promise((resolve, reject) => {
       this._db.all(
         GET_AVAILABLE_PROPERTIES,
-        { '@start': start, '@end': end },
+        { '@start': start, '@end': end, '@minCapacity': minCapacity },
         (err: Error, data: [any]) => {
           if (err) {
             reject(err);
             return;
           }
-          resolve(data);
+          resolve(
+            data.map(({ distance, ...other }) => {
+              const propertyLocation = generateFakeLatLng(location, distance);
+              return { ...other, location: propertyLocation };
+            })
+          );
           return;
         }
       );

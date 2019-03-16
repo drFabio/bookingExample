@@ -4,12 +4,14 @@ export const resolvers = {
   Query: {
     availableProperties: async (
       parent: any,
-      args: types.RangeParameters,
+      args: types.AvailablePropertiesParameters,
       context: types.Context
     ) => {
       return await context.bookingManager.getAvailableProperties(
         args.start,
-        args.end
+        args.end,
+        args.minCapacity,
+        args.location
       );
     },
     properties: async (parent: any, args: any, context: types.Context) => {

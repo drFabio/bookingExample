@@ -34,12 +34,15 @@ describe('BookingManager', () => {
     const manager = new BookingManager(mockDB);
     const start = mockStartDate;
     const end = mockEndDate;
-    await manager.getAvailableProperties(start, end);
+    const minCapacity = 1;
+    const mockLocation = { latitude: 1, longitude: 1 };
+    await manager.getAvailableProperties(start, end, minCapacity, mockLocation);
     const callArgs = mockDB.all.mock.calls[0];
     expect(callArgs[0]).toEqual(GET_AVAILABLE_PROPERTIES);
     expect(callArgs[1]).toEqual({
       '@start': start,
-      '@end': end
+      '@end': end,
+      '@minCapacity': minCapacity
     });
   });
   describe("Check's if a property is booked on a given period", () => {

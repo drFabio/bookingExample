@@ -2,11 +2,20 @@ import { gql } from 'apollo-server';
 
 export const typeDefs = gql`
   scalar Date
+  type LocationResponse {
+    latitude: Float
+    longitude: Float
+  }
+  input Location {
+    latitude: Float
+    longitude: Float
+  }
   type Property {
     id: String
     name: String
     city: String
     capacity: Int
+    location: LocationResponse
   }
   type Booking {
     id: String
@@ -23,7 +32,12 @@ export const typeDefs = gql`
   }
   type Query {
     properties: [Property]
-    availableProperties(start: Date!, end: Date!): [Property]
+    availableProperties(
+      start: Date!
+      end: Date!
+      minCapacity: Int!
+      location: Location!
+    ): [Property]
     bookings: [Booking]
   }
   interface Response {

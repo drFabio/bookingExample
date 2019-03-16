@@ -1,5 +1,5 @@
 import * as types from '../src/types';
-export const mockData = Symbol('data');
+export const mockData = [Symbol('data1'), Symbol('data2')];
 export const mockStartDate = '2019-01-01';
 export const mockEndDate = '2020-01-01';
 

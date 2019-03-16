@@ -52,10 +52,16 @@ export interface BookingRequest {
   end: DateStr;
   user: string;
   property: string;
-  people: Number;
+  people: number;
+}
+export interface Location {
+  latitude: number;
+  longitude: number;
 }
 
-export interface RangeParameters {
+export interface AvailablePropertiesParameters {
   start: DateStr;
   end: DateStr;
+  minCapacity: number;
+  location: Location;
 }
