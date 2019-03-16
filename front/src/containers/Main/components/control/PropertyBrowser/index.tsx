@@ -1,92 +1,81 @@
-import React, { Fragment, useState, useEffect } from "react";
-import { PropertyList, Property } from "./components/PropertyList";
-import { BookingControl } from "./components/BookingControl";
+import React, { Fragment } from "react";
+import { CapacitySelector } from "./components/CapacitySelector";
+import { PropertyList } from "./components/PropertyList";
 import { DateRangeSelector } from "../../../../../components/control/DateRangeSelector";
 import { Map } from "../../../../../components/control/Map";
+import {
+  TextButton,
+  Container
+} from "../../../../../components/presentational";
+import { Property, LatLng } from "../../../../../types";
 
-import { TextButton } from "../../../../../components/presentational";
-
+interface PropertyBrowserProps {
+  fromDate: null | string;
+  toDate: null | string;
+  minCapacity: number;
+  location: null | [number, number];
+  onAllowSearchChange(allowSearch: boolean): void;
+  onDateRangeChange(fromDate: string, toDate: string): void;
+  onCapacityChange(minCapacity: number): void;
+  onChooseProperty(property: Property): void;
+  loading: boolean;
+  data: any;
+  error: any;
+  availableProperties?: [Property];
+}
 const userId = "1";
-export function PropertyBrowser() {
-  const [location, setLocation] = useState<null | [number, number]>(null);
-  const [dateRange, setDateRange] = useState<null | [string, string]>(null);
-  const [selectedProperty, setProperty] = useState<null | Property>(null);
-  const [allowSearch, setAllowSearch] = useState<boolean>(false);
-  const [bookingId, setBooking] = useState<null | string>(null);
-
-  useEffect(() => {
-    if (allowSearch && !location) {
-      navigator.geolocation.getCurrentPosition(currentPosition => {
-        setLocation([
-          currentPosition.coords.latitude,
-          currentPosition.coords.longitude
-        ]);
-      });
-    }
-  });
-
-  const setSearch = (search: boolean) => setAllowSearch(search);
-  if (!location) {
-    return (
-      <p>
-        We need to know where you are to show properties! Click{" "}
-        <TextButton onClick={() => setSearch(true)}>here</TextButton> to let us
-        know where you are
-      </p>
-    );
-  }
-  if (!dateRange) {
-    return (
-      <Fragment>
-        <p>We know where you want to go, but when?</p>
-        <DateRangeSelector
-          onChooseDate={(fromDate, toDate) => setDateRange([fromDate, toDate])}
-        />
-        <Map position={location as [number, number]} />
-      </Fragment>
-    );
-  }
-  const [fromDate, toDate] = dateRange;
-
-  if (!selectedProperty) {
-    return (
-      <Fragment>
-        <p>
-          And where exactly are you going on {fromDate} - {toDate}{" "}
-          <button
-            onClick={e => {
-              e.preventDefault();
-              setDateRange(null);
-            }}
-          >
-            Change
-          </button>{" "}
-        </p>
-        <PropertyList
-          fromDate={fromDate as string}
-          toDate={toDate as string}
-          onChooseProperty={setProperty}
-        />
-      </Fragment>
-    );
-  }
-  if (!bookingId) {
-    return (
-      <BookingControl
-        user={userId}
-        property={selectedProperty.id}
-        start={fromDate}
-        end={toDate}
-        capacity={selectedProperty.capacity}
-        onSucessfullBooking={id => setBooking(id)}
-      />
+export function PropertyBrowser({
+  onAllowSearchChange,
+  location,
+  fromDate,
+  minCapacity,
+  toDate,
+  onDateRangeChange,
+  onCapacityChange,
+  onChooseProperty,
+  data,
+  error,
+  loading
+}: PropertyBrowserProps) {
+  let markers: Array<LatLng> = [];
+  let availableProperties: Array<Property> = [];
+  if (!loading && !error && data) {
+    availableProperties = data.availableProperties;
+    availableProperties.forEach(({ location }) =>
+      markers.push([location.latitude, location.longitude])
     );
   }
   return (
-    <p>
-      {`Congratulations you sucessfully booked ${
-        selectedProperty.name
-      } at ${fromDate}-${toDate}`}
-    </p>
+    <Fragment>
+      <Container>
+        <p>
+          Click{" "}
+          <TextButton onClick={() => onAllowSearchChange(true)}>
+            here
+          </TextButton>{" "}
+          to let us know where you are
+        </p>
+      </Container>
+      <Container>
+        <DateRangeSelector
+          onChooseDate={onDateRangeChange}
+          startDate={fromDate}
+          endDate={toDate}
+        />
+      </Container>
+      <Container>
+        <CapacitySelector
+          onCapacityChange={onCapacityChange}
+          minCapacity={minCapacity}
+        />
+      </Container>
+      <Map position={location as LatLng} markers={markers} />
+      <Container>
+        <PropertyList
+          onChooseProperty={onChooseProperty}
+          availableProperties={availableProperties}
+        />
+      </Container>
+    </Fragment>
   );
 }

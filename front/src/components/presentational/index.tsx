@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { space, color, fontSize, borders } from "styled-system";
+import { Link as BaseLink } from "react-router-dom";
 
 export const MainContainer = styled.main.attrs({
   fontSize: 3,
@@ -19,8 +20,6 @@ export const MainContainer = styled.main.attrs({
   grid-template-columns: 1fr 8fr 1fr;
 `;
 export const InnerContainer = styled.div.attrs({
-  pl: 3,
-  pr: 3,
   color: "text",
   borderColor: "secondary"
 })`
@@ -70,4 +69,22 @@ export const Button = styled(BaseButton).attrs({
   pr: 1
 })`
   ${borders}
+`;
+
+export const Menu = styled.nav``;
+export const Link = styled(BaseLink)`
+  color: inherit;
+  text-decoration: none;
+  & + & {
+    margin-left: ${({ theme: { space } }) => space[1]};
+  }
+`;
+
+export const Container = styled.div.attrs({
+  pt: 1,
+  pb: 1
+})`
+  ${space}
+  ${color}
+  ${fontSize}
 `;

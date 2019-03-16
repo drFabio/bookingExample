@@ -36,10 +36,4 @@ export const GlobalStyle = createGlobalStyle`
   *:focus {
     outline: none;
   }
-  a {
-    color: inherit;
-    & + & {
-      margin-left: 0.5em;
-    }
-  }
 `;
