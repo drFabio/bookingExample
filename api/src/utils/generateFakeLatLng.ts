@@ -36,6 +36,6 @@ export function generateFakeLatLng(
 
   return {
     latitude: randomLatitude / DEG_TO_RAD,
-    longitude: randomLatitude / DEG_TO_RAD
+    longitude: randomLongitude / DEG_TO_RAD
   };
 }
