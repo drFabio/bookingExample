@@ -4,9 +4,10 @@ import styled from "styled-components";
 import { LatLng, MarkerData } from "../../../types";
 import { hashMarkers } from "./hashMarkers";
 import { PropertyMarker } from "../../../components/presentational";
+import { useMutableRef } from "../../../utils/useMutableRef";
 
 const MapContainer = styled.section`
-  min-height: 10vh;
+  min-height: 35vh;
   height: 50%;
   width: 100%;
 `;
@@ -15,24 +16,31 @@ export interface MapProps {
   position?: null | LatLng;
   markers?: null | Array<MarkerData>;
   focusedMarker?: null | string;
+  defaultZoom?: number;
 }
-export function MarkersMap({ position, markers, focusedMarker }: MapProps) {
+export function MarkersMap({
+  position,
+  markers,
+  focusedMarker,
+  defaultZoom = 13
+}: MapProps) {
   if (!position) {
     return null;
   }
   const mapContainerRef = useRef<HTMLElement>(null);
-  const mapRef: MutableRefObject<LeafletMap | undefined> = useRef<LeafletMap>();
+  const mapRef = useMutableRef<LeafletMap>();
   useEffect(() => {
     if (mapContainerRef.current) {
-      mapRef.current = L.map(mapContainerRef.current).setView(position, 13);
+      mapRef.current = L.map(mapContainerRef.current).setView(
+        position,
+        defaultZoom
+      );
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
         mapRef.current
       );
     }
   }, []);
-  const positionRef: MutableRefObject<Marker<any> | undefined> = useRef<
-    Marker<any>
-  >();
+  const positionRef = useMutableRef<Marker<any>>();
   useEffect(() => {
     if (positionRef.current) {
       positionRef.current.setLatLng(position);
@@ -45,21 +53,17 @@ export function MarkersMap({ position, markers, focusedMarker }: MapProps) {
     }
   }, [position]);
 
-  const layerRef: MutableRefObject<LayerGroup<any> | undefined> = useRef<
-    LayerGroup<any>
-  >();
+  const layerRef = useMutableRef<LayerGroup<any>>();
   useEffect(() => {
     layerRef.current = L.layerGroup().addTo(mapRef.current as LeafletMap);
   }, []);
 
-  const markersRef: MutableRefObject<Map<string, Marker> | undefined> = useRef<
-    Map<string, Marker>
-  >();
+  const markersRef = useMutableRef<Map<string, Marker>>();
   useEffect(() => {
     layerRef.current!.clearLayers();
     if (markers) {
       const bounds = [position];
-      const markerMap: Map<string, Marker> = new Map();
+      const markerMap = new Map<string, Marker>();
 
       markersRef.current = markerMap;
       markers.forEach(({ id, location, popupText }) => {
@@ -75,7 +79,10 @@ export function MarkersMap({ position, markers, focusedMarker }: MapProps) {
     if (focusedMarker) {
       const markersMap = markersRef.current as Map<string, Marker>;
       const markerOnMap = markersMap.get(focusedMarker) as Marker;
-      (mapRef.current as LeafletMap).setView(markerOnMap.getLatLng(), 13);
+      (mapRef.current as LeafletMap).setView(
+        markerOnMap.getLatLng(),
+        defaultZoom
+      );
       markerOnMap.openPopup();
     }
   }, [focusedMarker]);

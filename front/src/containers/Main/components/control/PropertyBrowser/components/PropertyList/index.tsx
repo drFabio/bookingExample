@@ -28,8 +28,9 @@ export function PropertyList({
             return (
               <div key={id}>
                 <p>
-                  {name} , {city}, {capacity}{" "}
+                  {name} , {city}, up to {capacity} people
                   <TextButton
+                    ml={2}
                     onClick={(e: React.MouseEvent<HTMLElement>) => {
                       e.preventDefault();
                       onFocusProperty(current);
