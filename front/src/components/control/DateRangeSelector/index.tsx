@@ -17,26 +17,27 @@ export function DateRangeSelector({
   const [fromDate, setFromDate] = useState<null | string>(startDate);
   const [toDate, setToDate] = useState<null | string>(endDate);
   const getFlags = (start: null | string, end: null | string) => {
-    if (!start || !end) {
-      return {
-        isOrderCorrect: false,
-        isStartValid: false,
-        isEndValid: false
-      };
+    let isOrderCorrect = null;
+    let isStartValid = false;
+    let isEndValid = false;
+    let startMoment = null;
+    let endMoment = null;
+    if (start) {
+      startMoment = moment(start);
+      isStartValid = startMoment.isValid();
     }
-    const startMoment = moment(start);
-    const endMoment = moment(end);
-    const isStartValid = startMoment.isValid();
-    const isEndValid = endMoment.isValid();
-    if (!isStartValid || !isEndValid) {
-      return {
-        isOrderCorrect: false,
-        isStartValid,
-        isEndValid
-      };
+    if (end) {
+      endMoment = moment(end);
+      isEndValid = endMoment.isValid();
+    }
+
+    if (isStartValid && isEndValid) {
+      isOrderCorrect = (endMoment as moment.Moment).isAfter(
+        startMoment as moment.Moment
+      );
     }
     return {
-      isOrderCorrect: endMoment.isAfter(startMoment),
+      isOrderCorrect,
       isStartValid,
       isEndValid
     };
@@ -45,7 +46,6 @@ export function DateRangeSelector({
     fromDate,
     endDate
   );
-
   const swapDate = () => {
     setFromDate(toDate);
     setToDate(fromDate);
@@ -85,7 +85,7 @@ export function DateRangeSelector({
           const { isOrderCorrect: updateRange } = getFlags(fromDate, value);
           setToDate(value);
           if (updateRange) {
-            onChooseDate(toDate as string, value);
+            onChooseDate(fromDate as string, value);
           }
         }}
       />
