@@ -4,7 +4,7 @@ import { BookingControl } from "./components/control/BookingControl";
 import { withRouter, RouterProps } from "react-router";
 import qs from "query-string";
 import { Property } from "../../types";
-
+import { Link } from "../../components/presentational";
 const userId = "1";
 
 export interface MainProps extends RouterProps {
@@ -80,6 +80,9 @@ function BaseMain({ history, location }: MainProps) {
     });
     setCapacity(newCapacity);
   };
+  const unselectPropery = () => {
+    setProperty(null);
+  };
   let fromDate: null | string = null;
   let toDate: null | string = null;
 
@@ -108,10 +111,18 @@ function BaseMain({ history, location }: MainProps) {
           property={selectedProperty as Property}
           people={minCapacity}
           onSucessfullBooking={setBooking}
+          onGoBack={unselectPropery}
           user={userId}
         />
       )}
-      {bookingId && <p>Congratulations ! You sucessfully booked it!</p>}
+      {bookingId && (
+        <Fragment>
+          <p>Congratulations ! You sucessfully booked it!</p>
+          <p>
+            Check your <Link to="/bookings/">Bookings</Link>
+          </p>
+        </Fragment>
+      )}
     </Fragment>
   );
 }

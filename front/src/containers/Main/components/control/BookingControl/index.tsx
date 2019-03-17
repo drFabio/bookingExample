@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { TextButton } from "../../../../../components/presentational";
+import { Button, Container } from "../../../../../components/presentational";
 import { Property } from "../../../../../types";
 import { BookingMutation } from "./mutations/BookingMutation";
 
@@ -10,6 +10,7 @@ export interface BookingControlProps {
   end: string;
   people: number;
   onSucessfullBooking(bookingId: string): void;
+  onGoBack(): void;
 }
 export function BookingControl({
   user,
@@ -17,6 +18,7 @@ export function BookingControl({
   start,
   end,
   people,
+  onGoBack,
   onSucessfullBooking
 }: BookingControlProps) {
   const onBooking = ({ data }: any) => {
@@ -28,9 +30,12 @@ export function BookingControl({
     <BookingMutation>
       {(executeBooking, { loading, error }) => (
         <Fragment>
-          Are you sure you want to book {property.name} located in{" "}
-          {property.city} for {people} from {start} to {end}?
-          <TextButton
+          <Container>
+            Are you sure you want to book {property.name} located in{" "}
+            {property.city} for {people} from {start} to {end}?
+            <Button onClick={() => onGoBack()}>Change It!</Button>
+          </Container>
+          <Button
             onClick={e => {
               e.preventDefault();
               const variables = {
@@ -44,7 +49,7 @@ export function BookingControl({
             }}
           >
             {loading ? "Booking it..." : "Book it!"}
-          </TextButton>
+          </Button>
         </Fragment>
       )}
     </BookingMutation>
