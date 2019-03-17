@@ -53,11 +53,14 @@ export function Map({ position, markers }: MapProps) {
   useEffect(() => {
     layerRef.current!.clearLayers();
     if (markers) {
+      const bounds = [position];
       markers.forEach(marker => {
+        bounds.push(marker.location);
         L.marker(marker.location)
           .bindPopup(marker.popupText)
           .addTo(layerRef.current as LayerGroup);
       });
+      (mapRef.current as LeafletMap).fitBounds(bounds);
     }
   }, [hashMarkers(markers)]);
 
