@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { TextButton } from "../../../../../../../components/presentational";
+import { Button } from "../../../../../../../components/presentational";
 import { Property } from "../../../../../../../types";
 
 export interface PropertyListProps {
@@ -10,29 +10,34 @@ export function PropertyList({
   availableProperties,
   onChooseProperty
 }: PropertyListProps) {
-  if (!availableProperties) {
-    return null;
-  }
+  const isEmpty = !availableProperties || !availableProperties.length;
+
   return (
     <Fragment>
-      {availableProperties.map((current: Property) => {
-        const { id, name, city, capacity } = current;
-        return (
-          <div key={id}>
-            <p>
-              {name} , {city}, {capacity}{" "}
-              <TextButton
-                onClick={e => {
-                  e.preventDefault;
-                  onChooseProperty(current);
-                }}
-              >
-                Choose it!
-              </TextButton>
-            </p>
-          </div>
-        );
-      })}
+      <h3>Properties List</h3>
+      {isEmpty && <p>No properties to choose from</p>}
+      {!isEmpty && (
+        <Fragment>
+          {(availableProperties as Array<Property>).map((current: Property) => {
+            const { id, name, city, capacity } = current;
+            return (
+              <div key={id}>
+                <p>
+                  {name} , {city}, {capacity}{" "}
+                  <Button
+                    onClick={e => {
+                      e.preventDefault;
+                      onChooseProperty(current);
+                    }}
+                  >
+                    Choose it!
+                  </Button>
+                </p>
+              </div>
+            );
+          })}
+        </Fragment>
+      )}
     </Fragment>
   );
 }
