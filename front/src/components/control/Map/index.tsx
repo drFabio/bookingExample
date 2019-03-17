@@ -2,6 +2,7 @@ import React, { useRef, useEffect, Fragment, MutableRefObject } from "react";
 import L, { Map as LeafletMap, LayerGroup, Marker } from "leaflet";
 import styled from "styled-components";
 import { LatLng } from "../../../types";
+import { hashMarkers } from "./hashMarkers";
 
 const MapContainer = styled.section`
   min-height: 10vh;
@@ -56,7 +57,7 @@ export function Map({ position, markers }: MapProps) {
           .addTo(layerRef.current as LayerGroup);
       });
     }
-  }, [markers]);
+  }, [hashMarkers(markers)]);
 
   return (
     <Fragment>
