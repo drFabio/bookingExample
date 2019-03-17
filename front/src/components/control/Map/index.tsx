@@ -3,6 +3,7 @@ import L, { Map as LeafletMap, LayerGroup, Marker } from "leaflet";
 import styled from "styled-components";
 import { LatLng, MarkerData } from "../../../types";
 import { hashMarkers } from "./hashMarkers";
+import { PropertyMarker } from "../../../components/presentational";
 
 const MapContainer = styled.section`
   min-height: 10vh;
@@ -56,7 +57,7 @@ export function Map({ position, markers }: MapProps) {
       const bounds = [position];
       markers.forEach(marker => {
         bounds.push(marker.location);
-        L.marker(marker.location)
+        L.marker(marker.location, { icon: PropertyMarker })
           .bindPopup(marker.popupText)
           .addTo(layerRef.current as LayerGroup);
       });

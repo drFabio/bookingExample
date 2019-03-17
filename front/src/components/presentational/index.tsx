@@ -2,6 +2,8 @@ import React, { ReactNode } from "react";
 import styled from "styled-components";
 import { space, color, fontSize, borders } from "styled-system";
 import { Link as BaseLink } from "react-router-dom";
+import L from "leaflet";
+import iconUrl from "../../assets/map-marker.png";
 
 export const MainContainer = styled.main.attrs({
   fontSize: 3,
@@ -113,3 +115,9 @@ export const ErrorMessage = ({ children }: { children?: null | ReactNode }) => {
     <Container color="error">{children || "Something went wrong"}</Container>
   );
 };
+export const PropertyMarker = L.icon({
+  iconUrl,
+  iconSize: [25, 41], // size of the icon
+  iconAnchor: [12, 40], // point of the icon which will correspond to marker's location
+  popupAnchor: [-3, -25] // point from which the popup should open relative to the iconAnchor
+});
