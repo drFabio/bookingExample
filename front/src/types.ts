@@ -21,4 +21,5 @@ export interface Booking {
 export interface MarkerData {
   location: LatLng;
   popupText: string;
+  id: string;
 }

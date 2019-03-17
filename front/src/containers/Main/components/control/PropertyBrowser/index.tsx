@@ -1,8 +1,8 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { CapacitySelector } from "./components/CapacitySelector";
 import { PropertyList } from "./components/PropertyList";
 import { DateRangeSelector } from "../../../../../components/control/DateRangeSelector";
-import { Map } from "../../../../../components/control/Map";
+import { MarkersMap } from "../../../../../components/control/MarkersMap";
 import {
   Button,
   Container,
@@ -33,6 +33,7 @@ export function PropertyBrowser({
   onCapacityChange,
   onChooseProperty
 }: PropertyBrowserProps) {
+  const [focusedProperty, setPropertyFocus] = useState<null | Property>(null);
   let markers: Array<MarkerData> = [];
   let availableProperties: Array<Property> = [];
   return (
@@ -45,10 +46,10 @@ export function PropertyBrowser({
       {({ loading, data, error }) => {
         if (!loading && !error && data) {
           availableProperties = data.availableProperties;
-          availableProperties.forEach(({ location, name, city }) => {
+          availableProperties.forEach(({ location, name, city, id }) => {
             const { latitude, longitude } = location;
             const popupText = `${name} at ${city}`;
-            markers.push({ location: [latitude, longitude], popupText });
+            markers.push({ id, location: [latitude, longitude], popupText });
           });
         }
         return (
@@ -76,10 +77,15 @@ export function PropertyBrowser({
                     minCapacity={minCapacity}
                   />
                 </Container>
-                <Map position={location as LatLng} markers={markers} />
+                <MarkersMap
+                  focusedMarker={focusedProperty ? focusedProperty.id : null}
+                  position={location as LatLng}
+                  markers={markers}
+                />
                 <Container>
                   <PropertyList
                     onChooseProperty={onChooseProperty}
+                    onFocusProperty={setPropertyFocus}
                     availableProperties={availableProperties}
                   />
                 </Container>

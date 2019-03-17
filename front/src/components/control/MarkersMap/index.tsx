@@ -14,8 +14,9 @@ const MapContainer = styled.section`
 export interface MapProps {
   position?: null | LatLng;
   markers?: null | Array<MarkerData>;
+  focusedMarker?: null | string;
 }
-export function Map({ position, markers }: MapProps) {
+export function MarkersMap({ position, markers, focusedMarker }: MapProps) {
   if (!position) {
     return null;
   }
@@ -51,19 +52,33 @@ export function Map({ position, markers }: MapProps) {
     layerRef.current = L.layerGroup().addTo(mapRef.current as LeafletMap);
   }, []);
 
+  const markersRef: MutableRefObject<Map<string, Marker> | undefined> = useRef<
+    Map<string, Marker>
+  >();
   useEffect(() => {
     layerRef.current!.clearLayers();
     if (markers) {
       const bounds = [position];
-      markers.forEach(marker => {
-        bounds.push(marker.location);
-        L.marker(marker.location, { icon: PropertyMarker })
-          .bindPopup(marker.popupText)
-          .addTo(layerRef.current as LayerGroup);
+      const markerMap: Map<string, Marker> = new Map();
+
+      markersRef.current = markerMap;
+      markers.forEach(({ id, location, popupText }) => {
+        bounds.push(location);
+        const marker = L.marker(location, { icon: PropertyMarker });
+        marker.bindPopup(popupText).addTo(layerRef.current as LayerGroup);
+        markerMap.set(id, marker);
       });
       (mapRef.current as LeafletMap).fitBounds(bounds);
     }
   }, [hashMarkers(markers)]);
+  useEffect(() => {
+    if (focusedMarker) {
+      const markersMap = markersRef.current as Map<string, Marker>;
+      const markerOnMap = markersMap.get(focusedMarker) as Marker;
+      (mapRef.current as LeafletMap).setView(markerOnMap.getLatLng(), 13);
+      markerOnMap.openPopup();
+    }
+  }, [focusedMarker]);
 
   return (
     <Fragment>

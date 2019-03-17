@@ -8,10 +8,12 @@ import { Property } from "../../../../../../../types";
 export interface PropertyListProps {
   availableProperties: null | Array<Property>;
   onChooseProperty(property: Property): void;
+  onFocusProperty(property: Property): void;
 }
 export function PropertyList({
   availableProperties,
-  onChooseProperty
+  onChooseProperty,
+  onFocusProperty
 }: PropertyListProps) {
   const isEmpty = !availableProperties || !availableProperties.length;
 
@@ -27,7 +29,14 @@ export function PropertyList({
               <div key={id}>
                 <p>
                   {name} , {city}, {capacity}{" "}
-                  <TextButton>View on Map</TextButton>
+                  <TextButton
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                      e.preventDefault();
+                      onFocusProperty(current);
+                    }}
+                  >
+                    View on Map
+                  </TextButton>
                   <Button
                     onClick={(e: React.MouseEvent<HTMLElement>) => {
                       e.preventDefault();
