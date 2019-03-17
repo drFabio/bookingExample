@@ -52,7 +52,7 @@ function BaseMain({ history, location }: MainProps) {
         setNewLatLng(latitude, longitude);
       });
     }
-  }, [allowSearch]);
+  }, [allowSearch, geolocation]);
 
   const addToHistory = (newData: object) => {
     history.push({

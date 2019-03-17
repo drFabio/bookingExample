@@ -3,10 +3,7 @@ import { CapacitySelector } from "./components/CapacitySelector";
 import { PropertyList } from "./components/PropertyList";
 import { DateRangeSelector } from "../../../../../components/control/DateRangeSelector";
 import { Map } from "../../../../../components/control/Map";
-import {
-  TextButton,
-  Container
-} from "../../../../../components/presentational";
+import { Button, Container } from "../../../../../components/presentational";
 import { Property, LatLng } from "../../../../../types";
 import { PropertiesQuery } from "./queries/PropertiesQuery";
 
@@ -53,32 +50,34 @@ export function PropertyBrowser({
             <Container>
               <p>
                 Click{" "}
-                <TextButton onClick={() => onAllowSearchChange(true)}>
-                  here
-                </TextButton>{" "}
+                <Button onClick={() => onAllowSearchChange(true)}>here</Button>{" "}
                 to let us know where you are
               </p>
             </Container>
-            <Container>
-              <DateRangeSelector
-                onChooseDate={onDateRangeChange}
-                startDate={fromDate}
-                endDate={toDate}
-              />
-            </Container>
-            <Container>
-              <CapacitySelector
-                onCapacityChange={onCapacityChange}
-                minCapacity={minCapacity}
-              />
-            </Container>
-            <Map position={location as LatLng} markers={markers} />
-            <Container>
-              <PropertyList
-                onChooseProperty={onChooseProperty}
-                availableProperties={availableProperties}
-              />
-            </Container>
+            {location && (
+              <Fragment>
+                <Container>
+                  <DateRangeSelector
+                    onChooseDate={onDateRangeChange}
+                    startDate={fromDate}
+                    endDate={toDate}
+                  />
+                </Container>
+                <Container>
+                  <CapacitySelector
+                    onCapacityChange={onCapacityChange}
+                    minCapacity={minCapacity}
+                  />
+                </Container>
+                <Map position={location as LatLng} markers={markers} />
+                <Container>
+                  <PropertyList
+                    onChooseProperty={onChooseProperty}
+                    availableProperties={availableProperties}
+                  />
+                </Container>
+              </Fragment>
+            )}
           </Fragment>
         );
       }}
