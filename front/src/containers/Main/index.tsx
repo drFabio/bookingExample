@@ -5,6 +5,8 @@ import { withRouter, RouterProps } from "react-router";
 import qs from "query-string";
 import { Property } from "../../types";
 import { Link } from "../../components/presentational";
+import { useMutableRef } from "../../utils/useMutableRef";
+
 const userId = "1";
 
 export interface MainProps extends RouterProps {
@@ -14,9 +16,7 @@ export interface MainProps extends RouterProps {
 }
 function BaseMain({ history, location }: MainProps) {
   let searchParams: any = {};
-  if (location) {
-    searchParams = qs.parse(location.search);
-  }
+  searchParams = qs.parse(location.search);
 
   let initialGeoLocation: null | [number, number] = null;
   let initialDateRange: null | [string, string] = null;
@@ -44,7 +44,22 @@ function BaseMain({ history, location }: MainProps) {
   );
   const [selectedProperty, setProperty] = useState<null | Property>(null);
   const [bookingId, setBooking] = useState<null | string>(null);
+  const isMounting = useMutableRef<boolean>(true);
 
+  useEffect(() => {
+    if (isMounting.current) {
+      isMounting.current = false;
+    } else {
+      if (location.search === "") {
+        setAllowSearch(false);
+        setGeoLocation(null);
+        setCapacity(1);
+        setDateRange(null);
+        setProperty(null);
+        setBooking(null);
+      }
+    }
+  }, [location.search]);
   useEffect(() => {
     if (allowSearch && !geolocation) {
       navigator.geolocation.getCurrentPosition(currentPosition => {
