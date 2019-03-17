@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import moment from "moment";
-import { TextButton } from "../../presentational";
+import { Button } from "../../presentational";
 
 export interface DateRangeSelectorProps {
   onChooseDate(fromDate: string, toDate: string): void;
@@ -16,19 +16,36 @@ export function DateRangeSelector({
   const today = moment().format(DATE_FORMAT);
   const [fromDate, setFromDate] = useState<null | string>(startDate);
   const [toDate, setToDate] = useState<null | string>(endDate);
-
-  let isOrderCorrect = null;
-  let isFromDateValid = false;
-  if (fromDate) {
-    const fromMoment = moment(fromDate);
-    isFromDateValid = fromMoment.isValid();
-    if (toDate) {
-      const toMoment = moment(toDate);
-      if (isFromDateValid && toMoment.isValid()) {
-        isOrderCorrect = toMoment.isAfter(fromMoment);
-      }
+  const getFlags = (start: null | string, end: null | string) => {
+    if (!start || !end) {
+      return {
+        isOrderCorrect: false,
+        isStartValid: false,
+        isEndValid: false
+      };
     }
-  }
+    const startMoment = moment(start);
+    const endMoment = moment(end);
+    const isStartValid = startMoment.isValid();
+    const isEndValid = endMoment.isValid();
+    if (!isStartValid || !isEndValid) {
+      return {
+        isOrderCorrect: false,
+        isStartValid,
+        isEndValid
+      };
+    }
+    return {
+      isOrderCorrect: endMoment.isAfter(startMoment),
+      isStartValid,
+      isEndValid
+    };
+  };
+  const { isOrderCorrect, isStartValid: isFromDateValid } = getFlags(
+    fromDate,
+    endDate
+  );
+
   const swapDate = () => {
     setFromDate(toDate);
     setToDate(fromDate);
@@ -38,13 +55,9 @@ export function DateRangeSelector({
     .add("1", "day")
     .format(DATE_FORMAT);
   const hadDate = startDate && endDate;
-  const title = hadDate
-    ? `And where exactly are you going on ${fromDate} - ${toDate}`
-    : "When are we going there ?";
-
+  const verb = hadDate ? "change" : "set";
   return (
     <Fragment>
-      <p>{title}</p>
       <label htmlFor="fromDate">Start Date</label>
       <input
         required
@@ -53,7 +66,11 @@ export function DateRangeSelector({
         id="fromDate"
         value={fromDate || ""}
         onChange={({ target: { value } }) => {
+          const { isOrderCorrect: updateRange } = getFlags(value, toDate);
           setFromDate(value);
+          if (updateRange) {
+            onChooseDate(value, toDate as string);
+          }
         }}
       />
       <label htmlFor="toDate">End Date</label>
@@ -65,22 +82,17 @@ export function DateRangeSelector({
         min={minFromDate}
         value={toDate || ""}
         onChange={({ target: { value } }) => {
+          const { isOrderCorrect: updateRange } = getFlags(fromDate, value);
           setToDate(value);
+          if (updateRange) {
+            onChooseDate(toDate as string, value);
+          }
         }}
       />
       {isOrderCorrect === false && (
         <Fragment>
           <p>Your start date is AFTER your end Date</p>
-          <TextButton onClick={swapDate}>Swap it!</TextButton>
-        </Fragment>
-      )}
-      {isOrderCorrect && (
-        <Fragment>
-          <TextButton
-            onClick={() => onChooseDate(fromDate as string, toDate as string)}
-          >
-            {hadDate ? "Change It!" : "Choose It!"}
-          </TextButton>
+          <Button onClick={swapDate}>Swap it!</Button>
         </Fragment>
       )}
     </Fragment>
