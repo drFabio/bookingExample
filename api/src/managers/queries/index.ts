@@ -9,8 +9,8 @@ const GET_BOOKINGS_ON_PERIOD = `
 	FROM Bookings B 
 	WHERE
 			(
-					B.start_date BETWEEN DATE(@start) AND DATE(@end)
-					OR B.end_date BETWEEN  DATE(@start) AND DATE(@end)
+					B.start BETWEEN DATE(@start) AND DATE(@end)
+					OR B.end BETWEEN  DATE(@start) AND DATE(@end)
 			) 
 	AND (B.canceled != 1 OR b.canceled IS NULL)
 `;
@@ -25,8 +25,8 @@ export const GET_AVAILABLE_PROPERTIES = `
 `;
 
 export const BOOK_PROPERTY = `
-	INSERT INTO Bookings (user_id, property_id, start_date, end_date)
-			VALUES (@user, @property, @start, @end)
+	INSERT INTO Bookings (user_id, property_id, start, end, people)
+			VALUES (@user, @property, @start, @end, @people)
 `;
 
 export const CANCEL_BOOKING = `

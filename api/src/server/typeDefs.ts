@@ -24,6 +24,7 @@ export const typeDefs = gql`
     end: Date
     user: User
     canceled: Boolean
+    people: Int
   }
   type User {
     id: String

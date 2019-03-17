@@ -140,7 +140,8 @@ describe('BookingManager', () => {
         '@user': userId,
         '@property': propertyId,
         '@start': start,
-        '@end': end
+        '@end': end,
+        '@people': people
       });
     });
     it('fails on a booked property', async () => {

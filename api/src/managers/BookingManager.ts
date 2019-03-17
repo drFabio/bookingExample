@@ -150,7 +150,8 @@ export class BookingManager {
           '@user': userId,
           '@property': propertyId,
           '@start': start,
-          '@end': end
+          '@end': end,
+          '@people': people
         },
         function(err: Error) {
           if (err) {
