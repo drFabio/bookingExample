@@ -1,9 +1,22 @@
 import React, { ReactNode } from "react";
-import styled from "styled-components";
+import styled, { StyledComponent } from "styled-components";
 import { space, color, fontSize, borders } from "styled-system";
 import { Link as BaseLink } from "react-router-dom";
 import L from "leaflet";
 import iconUrl from "../../assets/map-marker.png";
+
+export const theme = {
+  fontSizes: [12, 14, 16, 24, 32, 48, 64, 96, 128],
+  space: [0, "0.5rem", "1rem", "1.5rem", "3rem"],
+  colors: {
+    text: "#717173",
+    white: "#fff",
+    secondary: "#0d4a23",
+    muted: "#BEBEBE",
+    error: "#ff0000"
+  },
+  borderWidths: [1, 2, "0.5em", "1em", "1.5em"]
+};
 
 export const MainContainer = styled.main.attrs({
   fontSize: 3,
@@ -33,6 +46,8 @@ export const InnerContainer = styled.div.attrs({
 export const Header = styled.header.attrs({
   pt: 1,
   pb: 1,
+  pl: 4,
+  pr: 4,
   bg: "secondary",
   color: "white",
   fontSize: 5
@@ -42,29 +57,19 @@ export const Header = styled.header.attrs({
   grid-area: header;
 `;
 
-export const theme = {
-  fontSizes: [12, 14, 16, 24, 32, 48, 64, 96, 128],
-  space: [0, "0.5rem", "1rem", "1.5rem", "3rem"],
-  colors: {
-    text: "#717173",
-    white: "#fff",
-    secondary: "#0d4a23",
-    muted: "#BEBEBE",
-    error: "#ff0000"
-  },
-  borderWidths: [1, 2, "0.5em", "1em", "1.5em"]
-};
-
-export const BaseButton = styled.button`
+export const BaseButton: StyledComponent<any, any> = styled.button`
   ${space}
   ${color}
   ${fontSize}
   &:disabled {
     cursor: not-allowed;
   }
+  & + ${() => BaseButton} {
+    margin-left: ${({ theme: { space } }) => space[2]};
+  }
 `;
 
-export const TextButton = styled(BaseButton)`
+export const TextButton = styled(BaseButton).attrs({ color: "secondary" })`
   &:hover {
     text-decoration: underline;
     text-decoration-color: ${({ theme: { colors } }) => colors.secondary};
@@ -93,7 +98,7 @@ export const Button = styled(BaseButton).attrs({
 export const Menu = styled.nav``;
 export const Link = styled(BaseLink)`
   color: inherit;
-  text-decoration: none;
+  text-decoration: underline;
   & + & {
     margin-left: ${({ theme: { space } }) => space[1]};
   }

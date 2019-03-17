@@ -41,7 +41,7 @@ export function BookingControl({
             <Button onClick={() => onGoBack()}>Change It!</Button>
           </Container>
           <Button
-            onClick={e => {
+            onClick={(e: React.MouseEvent<HTMLElement>) => {
               e.preventDefault();
               const variables = {
                 user,

@@ -1,5 +1,8 @@
 import React, { Fragment } from "react";
-import { Button } from "../../../../../../../components/presentational";
+import {
+  Button,
+  TextButton
+} from "../../../../../../../components/presentational";
 import { Property } from "../../../../../../../types";
 
 export interface PropertyListProps {
@@ -24,9 +27,10 @@ export function PropertyList({
               <div key={id}>
                 <p>
                   {name} , {city}, {capacity}{" "}
+                  <TextButton>View on Map</TextButton>
                   <Button
-                    onClick={e => {
-                      e.preventDefault;
+                    onClick={(e: React.MouseEvent<HTMLElement>) => {
+                      e.preventDefault();
                       onChooseProperty(current);
                     }}
                   >
