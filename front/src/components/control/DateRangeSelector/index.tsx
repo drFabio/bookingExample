@@ -42,20 +42,20 @@ export function DateRangeSelector({
       isEndValid
     };
   };
-  const { isOrderCorrect, isStartValid: isFromDateValid } = getFlags(
-    fromDate,
-    endDate
-  );
+
   const swapDate = () => {
-    setFromDate(toDate);
     setToDate(fromDate);
+    setFromDate(toDate);
   };
 
+  const { isOrderCorrect, isStartValid: isFromDateValid } = getFlags(
+    fromDate,
+    toDate
+  );
   const minFromDate = moment(isFromDateValid ? (fromDate as string) : today)
     .add("1", "day")
     .format(DATE_FORMAT);
   const hadDate = startDate && endDate;
-  const verb = hadDate ? "change" : "set";
   return (
     <Fragment>
       <label htmlFor="fromDate">Start Date</label>
