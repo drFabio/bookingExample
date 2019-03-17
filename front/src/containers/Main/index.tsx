@@ -1,9 +1,11 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { PropertiesQuery } from "./components/control/PropertiesQuery";
 import { PropertyBrowser } from "./components/control/PropertyBrowser";
+import { BookingControl } from "./components/control/BookingControl";
 import { withRouter, RouterProps } from "react-router";
 import qs from "query-string";
 import { Property } from "../../types";
+
+const userId = "1";
 
 export interface MainProps extends RouterProps {
   location: {
@@ -83,27 +85,32 @@ function BaseMain({ history, location }: MainProps) {
   if (dateRange) {
     [fromDate, toDate] = dateRange;
   }
-  const commonProps = {
-    minCapacity,
-    location: geolocation,
-    fromDate,
-    toDate
-  };
+
   return (
-    <PropertiesQuery {...commonProps}>
-      {({ loading, data, error }) => (
+    <Fragment>
+      {!selectedProperty && (
         <PropertyBrowser
-          {...commonProps}
+          minCapacity={minCapacity}
+          location={geolocation}
+          fromDate={fromDate}
+          toDate={toDate}
           onCapacityChange={setNewCapacity}
           onDateRangeChange={setNewDateRange}
           onAllowSearchChange={setNewAllowSearch}
           onChooseProperty={setProperty}
-          loading={loading}
-          error={error}
-          data={data}
         />
       )}
-    </PropertiesQuery>
+      {selectedProperty && (
+        <BookingControl
+          start={fromDate as string}
+          end={toDate as string}
+          property={selectedProperty as Property}
+          people={minCapacity}
+          onSucessfullBooking={setBooking}
+          user={userId}
+        />
+      )}
+    </Fragment>
   );
 }
 

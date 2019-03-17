@@ -2,12 +2,6 @@ import React from "react";
 import { Query, QueryProps } from "react-apollo";
 import gql from "graphql-tag";
 
-export interface Property {
-  id: string;
-  capacity: number;
-  name: string;
-  city: string;
-}
 export interface PropertyListProps {
   fromDate: null | string;
   toDate: null | string;
