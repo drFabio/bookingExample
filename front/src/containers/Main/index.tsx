@@ -33,14 +33,6 @@ function BaseMain({ history, location }: MainProps) {
   if (searchParams.capacity) {
     initialCapacity = parseInt(searchParams.capacity, 10);
   }
-  useEffect(() => {
-    if (allowSearch && !geolocation) {
-      navigator.geolocation.getCurrentPosition(currentPosition => {
-        const { latitude, longitude } = currentPosition.coords;
-        setNewLatLng(latitude, longitude);
-      });
-    }
-  });
 
   const [allowSearch, setAllowSearch] = useState<boolean>(false);
   const [geolocation, setGeoLocation] = useState<null | [number, number]>(
@@ -52,6 +44,15 @@ function BaseMain({ history, location }: MainProps) {
   );
   const [selectedProperty, setProperty] = useState<null | Property>(null);
   const [bookingId, setBooking] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (allowSearch && !geolocation) {
+      navigator.geolocation.getCurrentPosition(currentPosition => {
+        const { latitude, longitude } = currentPosition.coords;
+        setNewLatLng(latitude, longitude);
+      });
+    }
+  }, [allowSearch]);
 
   const addToHistory = (newData: object) => {
     history.push({
@@ -100,7 +101,7 @@ function BaseMain({ history, location }: MainProps) {
           onChooseProperty={setProperty}
         />
       )}
-      {selectedProperty && (
+      {selectedProperty && !bookingId && (
         <BookingControl
           start={fromDate as string}
           end={toDate as string}
@@ -110,6 +111,7 @@ function BaseMain({ history, location }: MainProps) {
           user={userId}
         />
       )}
+      {bookingId && <p>Congratulations ! You sucessfully booked it!</p>}
     </Fragment>
   );
 }

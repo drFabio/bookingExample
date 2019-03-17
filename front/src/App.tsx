@@ -14,6 +14,7 @@ import { settings } from "./settings";
 import { ApolloProvider } from "react-apollo";
 import { Main } from "./containers/Main";
 import { About } from "./containers/About";
+import { Bookings } from "./containers/Bookings";
 
 const client = new ApolloClient({
   uri: settings.graphqlUrl
@@ -34,11 +35,13 @@ function App() {
                 <nav>
                   <Link to="/">Home</Link>
                   <Link to="/about/">About</Link>
+                  <Link to="/bookings/">Bookings</Link>
                 </nav>
               </Header>
               <InnerContainer>
                 <Route path="/" exact component={Main} />
                 <Route path="/about" exact component={About} />
+                <Route path="/bookings" exact component={Bookings} />
               </InnerContainer>
             </MainContainer>
           </Router>

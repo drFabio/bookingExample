@@ -10,3 +10,11 @@ export interface Property {
   city: string;
   location: Location;
 }
+
+export interface Booking {
+  id: string;
+  start: string;
+  end: string;
+  people: number;
+  property: Property;
+}
