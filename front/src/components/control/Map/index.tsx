@@ -35,9 +35,11 @@ export function Map({ position, markers }: MapProps) {
     if (positionRef.current) {
       positionRef.current.setLatLng(position);
     } else {
-      positionRef.current = L.marker(position)
-        .bindPopup("We think you are here")
-        .addTo(mapRef.current as LeafletMap);
+      positionRef.current = L.marker(position).addTo(
+        mapRef.current as LeafletMap
+      );
+
+      positionRef.current.bindPopup("We think you are here").openPopup();
     }
   }, [position]);
 
