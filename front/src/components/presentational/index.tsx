@@ -45,7 +45,8 @@ export const theme = {
   colors: {
     text: "#717173",
     white: "#fff",
-    secondary: "#0d4a23"
+    secondary: "#0d4a23",
+    muted: "#BEBEBE"
   },
   borderWidths: [1, 2, "0.5em", "1em", "1.5em"]
 };
@@ -54,6 +55,9 @@ export const BaseButton = styled.button`
   ${space}
   ${color}
   ${fontSize}
+  &:disabled {
+    cursor: not-allowed;
+  }
 `;
 
 export const TextButton = styled(BaseButton)`
@@ -66,9 +70,20 @@ export const TextButton = styled(BaseButton)`
 export const Button = styled(BaseButton).attrs({
   borderWidth: 1,
   pl: 1,
-  pr: 1
+  pr: 1,
+  color: "secondary",
+  borderStyle: "solid",
+  borderColor: "secondary"
 })`
   ${borders}
+  &:hover:enabled {
+    color: ${({ theme: { colors } }) => colors.white};
+    background-color: ${({ theme: { colors } }) => colors.secondary};
+  }
+  &:disabled {
+    color: ${({ theme: { colors } }) => colors.muted};
+    border-color: ${({ theme: { colors } }) => colors.muted};
+  }
 `;
 
 export const Menu = styled.nav``;
