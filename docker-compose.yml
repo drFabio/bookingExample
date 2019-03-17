@@ -10,7 +10,7 @@ services:
     volumes:
       - ./front:/etc/front
     working_dir: /etc/front
-    command: "sh -c 'while sleep 3600; do :; done'"
+    command: "npm run demo"
   api:
     image: node:11.10.0
     hostname: api
@@ -24,7 +24,7 @@ services:
     volumes:
       - ./api:/etc/api
     working_dir: /etc/api
-    command: "sh -c 'while sleep 3600; do :; done'"
+    command: "npm run demo"
 networks:
   database:
     driver: bridge

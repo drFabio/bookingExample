@@ -6,7 +6,8 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "tsc": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "demo": "npm install && npm start"
   },
   "keywords": [],
   "author": "",
@@ -28,6 +29,7 @@
     "apollo-server": "^2.4.8",
     "express": "^4.16.4",
     "graphql": "^14.1.1",
+    "moment": "^2.24.0",
     "sqlite3": "^4.0.6",
     "winston": "^3.2.1"
   },

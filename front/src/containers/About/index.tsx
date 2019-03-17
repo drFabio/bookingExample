@@ -12,6 +12,10 @@ export function About() {
         </a>{" "}
         for the user listing
       </p>
+      <p>
+        You can also access the graphiql playgroung{" "}
+        <a href="http://127.0.0.1:5000/">Here on http://127.0.0.1:5000/</a>
+      </p>
     </Fragment>
   );
 }
