@@ -4,7 +4,7 @@ import { PropertyList } from "./components/PropertyList";
 import { DateRangeSelector } from "../../../../../components/control/DateRangeSelector";
 import { Map } from "../../../../../components/control/Map";
 import { Button, Container } from "../../../../../components/presentational";
-import { Property, LatLng } from "../../../../../types";
+import { Property, MarkerData, LatLng } from "../../../../../types";
 import { PropertiesQuery } from "./queries/PropertiesQuery";
 
 interface PropertyBrowserProps {
@@ -29,7 +29,7 @@ export function PropertyBrowser({
   onCapacityChange,
   onChooseProperty
 }: PropertyBrowserProps) {
-  let markers: Array<LatLng> = [];
+  let markers: Array<MarkerData> = [];
   let availableProperties: Array<Property> = [];
   return (
     <PropertiesQuery
@@ -41,9 +41,11 @@ export function PropertyBrowser({
       {({ loading, data, error }) => {
         if (!loading && !error && data) {
           availableProperties = data.availableProperties;
-          availableProperties.forEach(({ location }) =>
-            markers.push([location.latitude, location.longitude])
-          );
+          availableProperties.forEach(({ location, name, city }) => {
+            const { latitude, longitude } = location;
+            const popupText = `${name} at ${city}`;
+            markers.push({ location: [latitude, longitude], popupText });
+          });
         }
         return (
           <Fragment>

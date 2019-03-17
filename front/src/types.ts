@@ -18,3 +18,7 @@ export interface Booking {
   people: number;
   property: Property;
 }
+export interface MarkerData {
+  location: LatLng;
+  popupText: string;
+}

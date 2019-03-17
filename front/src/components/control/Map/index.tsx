@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, Fragment, MutableRefObject } from "react";
 import L, { Map as LeafletMap, LayerGroup, Marker } from "leaflet";
 import styled from "styled-components";
-import { LatLng } from "../../../types";
+import { LatLng, MarkerData } from "../../../types";
 import { hashMarkers } from "./hashMarkers";
 
 const MapContainer = styled.section`
@@ -12,7 +12,7 @@ const MapContainer = styled.section`
 
 export interface MapProps {
   position?: null | LatLng;
-  markers?: null | Array<LatLng>;
+  markers?: null | Array<MarkerData>;
 }
 export function Map({ position, markers }: MapProps) {
   if (!position) {
@@ -54,8 +54,8 @@ export function Map({ position, markers }: MapProps) {
     layerRef.current!.clearLayers();
     if (markers) {
       markers.forEach(marker => {
-        L.marker(marker)
-          .bindPopup(JSON.stringify(marker))
+        L.marker(marker.location)
+          .bindPopup(marker.popupText)
           .addTo(layerRef.current as LayerGroup);
       });
     }

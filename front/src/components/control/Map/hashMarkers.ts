@@ -1,8 +1,9 @@
-import { LatLng } from "../../../types";
+import { MarkerData } from "../../../types";
 
-export function hashMarkers(markers: undefined | null | Array<LatLng>) {
+export function hashMarkers(markers: undefined | null | Array<MarkerData>) {
   if (!markers) return "";
   return markers.reduce((hash, curr) => {
-    return `${hash},[${curr[0]}],[${curr[1]}]`;
+    const [lat, lng] = curr.location;
+    return `${hash},[${lat}],[${lng}]`;
   }, "");
 }
