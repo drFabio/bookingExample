@@ -1,3 +1,4 @@
+import React, { ReactNode } from "react";
 import styled from "styled-components";
 import { space, color, fontSize, borders } from "styled-system";
 import { Link as BaseLink } from "react-router-dom";
@@ -46,7 +47,8 @@ export const theme = {
     text: "#717173",
     white: "#fff",
     secondary: "#0d4a23",
-    muted: "#BEBEBE"
+    muted: "#BEBEBE",
+    error: "#ff0000"
   },
   borderWidths: [1, 2, "0.5em", "1em", "1.5em"]
 };
@@ -102,4 +104,12 @@ export const Container = styled.div.attrs({
   ${space}
   ${color}
   ${fontSize}
+  ${borders}
+
 `;
+
+export const ErrorMessage = ({ children }: { children?: null | ReactNode }) => {
+  return (
+    <Container color="error">{children || "Something went wrong"}</Container>
+  );
+};

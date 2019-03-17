@@ -3,7 +3,11 @@ import { CapacitySelector } from "./components/CapacitySelector";
 import { PropertyList } from "./components/PropertyList";
 import { DateRangeSelector } from "../../../../../components/control/DateRangeSelector";
 import { Map } from "../../../../../components/control/Map";
-import { Button, Container } from "../../../../../components/presentational";
+import {
+  Button,
+  Container,
+  ErrorMessage
+} from "../../../../../components/presentational";
 import { Property, MarkerData, LatLng } from "../../../../../types";
 import { PropertiesQuery } from "./queries/PropertiesQuery";
 
@@ -49,6 +53,7 @@ export function PropertyBrowser({
         }
         return (
           <Fragment>
+            {error && <ErrorMessage />}
             <Container>
               <p>
                 Click{" "}

@@ -1,5 +1,9 @@
 import React, { Fragment } from "react";
-import { Button, Container } from "../../../../../components/presentational";
+import {
+  Button,
+  Container,
+  ErrorMessage
+} from "../../../../../components/presentational";
 import { Property } from "../../../../../types";
 import { BookingMutation } from "./mutations/BookingMutation";
 
@@ -30,6 +34,7 @@ export function BookingControl({
     <BookingMutation>
       {(executeBooking, { loading, error }) => (
         <Fragment>
+          {error && <ErrorMessage />}
           <Container>
             Are you sure you want to book {property.name} located in{" "}
             {property.city} for {people} from {start} to {end}?
