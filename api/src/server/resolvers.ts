@@ -7,7 +7,7 @@ export const resolvers = {
       args: types.AvailablePropertiesParameters,
       context: types.Context
     ) => {
-      return await context.bookingManager.getAvailableProperties(
+      return context.bookingManager.getAvailableProperties(
         args.start,
         args.end,
         args.minCapacity,
@@ -15,9 +15,11 @@ export const resolvers = {
       );
     },
     properties: async (parent: any, args: any, context: types.Context) => {
-      return await context.bookingManager.getAllProperties();
+      return context.bookingManager.getAllProperties();
     },
-    bookings: () => []
+    userBookings: async (parent: any, args: any, context: types.Context) => {
+      return context.bookingManager.getUserBookings(args.user);
+    }
   },
   Mutation: {
     book: async (

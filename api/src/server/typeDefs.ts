@@ -38,7 +38,7 @@ export const typeDefs = gql`
       minCapacity: Int!
       location: Location!
     ): [Property]
-    bookings: [Booking]
+    userBookings(user: ID!): [Booking]
   }
   interface Response {
     success: Boolean!
